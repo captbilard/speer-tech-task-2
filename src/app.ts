@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'hello from server' });
 });
 app.get('/logout', logOut);
+
 app.use('/auth', authRouter);
 app.use('/api/v1', checkToken, authGuard, router);
 
