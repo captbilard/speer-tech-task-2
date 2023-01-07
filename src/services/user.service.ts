@@ -9,7 +9,12 @@ export const create = async (username, password) => {
     const newUser = await prisma.user.create({
       data: {
         username,
-        password: hash
+        password: hash,
+        wallet: {
+          create: {
+            balance: 0
+          }
+        }
       }
     });
 
@@ -59,6 +64,6 @@ export const blacklistToken = async (token) => {
     });
     return;
   } catch (error) {
-    throw error
+    throw error;
   }
 };

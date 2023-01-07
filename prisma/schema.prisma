@@ -15,6 +15,7 @@ model User {
   username  String   @unique
   password  String
   createdAt DateTime @default(now())
+  wallet    Wallet?
 }
 
 model BlackList {
@@ -22,4 +23,15 @@ model BlackList {
   createdAt DateTime @default(now())
 
   token String
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  balance Decimal
+
+  userId    String @unique
+  belongsTo User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
