@@ -49,3 +49,16 @@ export const signIn = async (username, password) => {
     throw e;
   }
 };
+
+export const blacklistToken = async (token) => {
+  try {
+    const invalidToken = await prisma.blackList.create({
+      data: {
+        token
+      }
+    });
+    return;
+  } catch (error) {
+    throw error
+  }
+};

@@ -3,7 +3,9 @@ import bcrypt from 'bcrypt';
 
 export const createJWT = (user) => {
   const { id, username } = user;
-  const token = jwt.sign({ id, username }, process.env.JWT_SECRET);
+  const token = jwt.sign({ id, username }, process.env.JWT_SECRET, {
+    expiresIn: '1d'
+  });
 
   return token;
 };
@@ -19,17 +21,7 @@ export const hashPassword = (password) => {
 export const authGuard = (req, res, next) => {
   const bearer = req.headers.authorization;
 
-  if (!bearer) {
-    res.status(401).send('Authorization Error');
-    return;
-  }
-
   const [, token] = bearer.split(' ');
-  if (!token) {
-    req.status(401).send('Authorization Error');
-    return;
-  }
-
   // check the token sent
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);

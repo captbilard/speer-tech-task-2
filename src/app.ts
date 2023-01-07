@@ -2,8 +2,10 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import { body } from 'express-validator';
-import * as userController from './controller/user.controller'
-
+import * as userController from './controller/user.controller';
+import { validate } from './middleware/validation';
+import { checkToken } from './middleware/checkToken';
+import { authGuard } from './utils/authUtils';
 
 const app = express();
 
@@ -16,13 +18,22 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'hello from server' });
 });
 
-app.use('/api/v1', (req,res)=>{})
+app.get('/api/v1', checkToken, authGuard, (req, res) => {
+  res.status(200).json({ message: 'worked' });
+});
 app.post(
   '/user',
-  [body('username').exists(), body('password').exists()], userController.createUser);
+  [body('username').exists(), body('password').exists()],
+  validate,
+  userController.createUser
+);
 app.post(
   '/login',
-  [body('username').exists(), body('password').exists()], userController.loginUser);
+  [body('username').exists(), body('password').exists()],
+  validate,
+  userController.loginUser
+);
+app.get('/logout', userController.logOut);
 
 app.use((err, req, res, next) => {
   if (err.type == 'auth') {
