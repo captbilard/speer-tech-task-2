@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import { body } from 'express-validator';
+import * as userController from './controller/user.controller'
 
 
 const app = express();
@@ -18,10 +19,10 @@ app.get('/', (req, res) => {
 app.use('/api/v1', (req,res)=>{})
 app.post(
   '/user',
-  [body('username').exists(), body('password').exists()],);
+  [body('username').exists(), body('password').exists()], userController.createUser);
 app.post(
   '/login',
-  [body('username').exists(), body('password').exists()],);
+  [body('username').exists(), body('password').exists()], userController.loginUser);
 
 app.use((err, req, res, next) => {
   if (err.type == 'auth') {
